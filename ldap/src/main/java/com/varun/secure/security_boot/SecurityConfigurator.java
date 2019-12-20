@@ -1,10 +1,11 @@
-package com.varun.secure.security_boot.controller;
+package com.varun.secure.security_boot;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -15,32 +16,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfigurator extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        auth.inMemoryAuthentication()
-                .withUser("varun")
-                .password("varun")
-                .roles("USER")
+        auth.ldapAuthentication()
+                .userDnPatterns("uid={0},ou=people")
+                .groupSearchBase("ou=groups")
+                .contextSource()
+                .url("ldap://localhost:14000/dc=springframework,dc=org")
                 .and()
-                .withUser("taner")
-                .password("taner")
-                .roles("ADMIN");
+                .passwordCompare()
+                .passwordEncoder(new LdapShaPasswordEncoder())
+                .passwordAttribute("userPassword");
 
-    }
-
-    @Bean
-    public PasswordEncoder getPass(){
-        return NoOpPasswordEncoder.getInstance();
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/user").hasAnyRole("USER","ADMIN")
-                .antMatchers("/").permitAll()
-                .and().formLogin();
-
+        http .authorizeRequests()
+                .anyRequest().fullyAuthenticated()
+                .and()
+                .formLogin();
 
     }
 

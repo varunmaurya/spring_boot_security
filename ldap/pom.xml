@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.varun.secure</groupId>
-	<artifactId>security_boot</artifactId>
+	<artifactId>security_boot_ldap</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>security_boot</name>
+	<name>security_boot_ldap</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -46,7 +46,6 @@
 		<dependency>
 			<groupId>com.unboundid</groupId>
 			<artifactId>unboundid-ldapsdk</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.restdocs</groupId>
@@ -57,6 +56,14 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ldap</groupId>
+			<artifactId>spring-ldap-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
 		</dependency>
 	</dependencies>
 
